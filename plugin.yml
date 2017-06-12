@@ -1,0 +1,17 @@
+name: FlyTime
+main: me.sisko.fly.Main
+version: 1.1
+depend: [Vault]
+commands:
+  fly:
+    description: Fly for a set period of time
+    usage: /fly
+  flytime:
+    description: Checks how long a player can fly
+    usage: /flytime [player]
+  flyreset:
+    description: Resets a player's fly time
+    usage: /flyreset <player>
+  flyreload:
+    description: Reloads FlyTime's config
+    usage: /flyreload
