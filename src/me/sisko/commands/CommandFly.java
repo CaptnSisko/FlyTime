@@ -1,5 +1,7 @@
 package me.sisko.commands;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +19,7 @@ public class CommandFly implements CommandExecutor {
 				if (p.getAllowFlight()) {
 					p.setAllowFlight(false);
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&',Main.prefix + Main.plugin.getConfig().getString("lang.disabledUnlimited")));
+					safeTp(p);
 				} else {
 					p.setAllowFlight(true);
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&',Main.prefix + Main.plugin.getConfig().getString("lang.enabledUnlimited")));
@@ -27,6 +30,7 @@ public class CommandFly implements CommandExecutor {
 						Main.flyingPlayers.remove(p);
 						p.sendMessage(ChatColor.translateAlternateColorCodes('&',Main.prefix + Main.plugin.getConfig().getString("lang.disabled")));
 						p.setAllowFlight(false);
+						safeTp(p);
 					} else {
 						Main.flyingPlayers.add(p);
 						p.sendMessage(ChatColor.translateAlternateColorCodes('&',Main.prefix + Main.plugin.getConfig().getString("lang.enabled")));
@@ -47,5 +51,20 @@ public class CommandFly implements CommandExecutor {
 			Main.plugin.getLogger().info("You can't fly from console!");
 			return true;
 		}
+	}
+	public static void safeTp(Player p) {
+		if (!Main.plugin.getConfig().getBoolean("autoTeleportToGround")) return;
+		Location l = p.getLocation();
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + Main.plugin.getConfig().getString("lang.attemptGroundTp")));
+		while (l.getBlock().getType().equals(Material.AIR)) {
+			l = new Location(p.getWorld(), l.getX(), l.getY() - 1, l.getZ());
+			if (l.getY() <= 0) {
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + Main.plugin.getConfig().getString("lang.groundTpFail")));
+				return;
+			}
+		}
+		p.teleport(new Location(p.getWorld(), l.getX(), l.getY() + 1, l.getZ()));
+		p.setFallDistance(0);
+
 	}
 }
