@@ -1,7 +1,6 @@
 package me.sisko.fly;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
@@ -13,11 +12,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
 
 import me.sisko.commands.*;
 import net.milkbowl.vault.permission.Permission;
 
+@SuppressWarnings("ALL")
 public class Main extends JavaPlugin implements Listener {
 	public static Main plugin;
 	public static Permission perms;
@@ -74,17 +73,6 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		new FlyRefresher().runTaskTimer(this, 0, 20);
 		getServer().getPluginManager().registerEvents(this, this);
-		
-	    try {
-	        Metrics metrics = new Metrics(this);
-	        metrics.start();
-	    } catch (IOException e) {
-	    	getLogger().warning("Could not connect to pluginmetrics server!");
-	    }
-	}
-
-	@Override
-	public void onDisable() {
 	}
 
 	@EventHandler
