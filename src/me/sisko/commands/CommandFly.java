@@ -11,6 +11,7 @@ import me.sisko.fly.Main;
 import me.sisko.fly.PlayerSaver;
 import net.md_5.bungee.api.ChatColor;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CommandFly implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {

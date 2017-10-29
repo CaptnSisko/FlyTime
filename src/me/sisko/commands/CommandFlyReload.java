@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.sisko.fly.Main;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CommandFlyReload implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {

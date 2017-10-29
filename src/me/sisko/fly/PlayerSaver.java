@@ -6,36 +6,37 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+
+@SuppressWarnings("WeakerAccess")
 public class PlayerSaver {
+
+	private static void setTimes(FileConfiguration config, File file){
+		try {
+			config.set("secondsRemaining", Main.plugin.getConfig().getInt("flyTime"));
+			config.set("resetTime", System.currentTimeMillis() / 1000 + Main.plugin.getConfig().getInt("flyResetTime"));
+			config.save(file);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+	}
+
 	private static File getPlayerFile(String uuid) {
 		File userdata = new File(Main.plugin.getDataFolder(), File.separator + "PlayerData");
-		File f = new File(userdata, File.separator + uuid + ".yml");
-		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		if (!f.exists()) {
-			try {
-				playerData.set("secondsRemaining", Main.plugin.getConfig().getInt("flyTime"));
-				playerData.set("resetTime", System.currentTimeMillis() / 1000 + Main.plugin.getConfig().getInt("flyResetTime"));
-				playerData.save(f);
-			} catch (IOException exception) {
-				exception.printStackTrace();
-			}
+		File playerFile = new File(userdata, File.separator + uuid + ".yml");
+		FileConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
+		if (!playerFile.exists()) {
+			setTimes(playerData,playerFile);
 		}
-		return f;
+		return playerFile;
 	}
 
 	public static void resetTime(String uuid) {
 		if (new File(new File(Main.plugin.getDataFolder(), File.separator + "PlayerData"), File.separator + uuid + ".yml").exists()) {
 			File playerFile = getPlayerFile(uuid);
-			FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
-			if (Main.plugin.getConfig().getInt("flyResetTime") > 0 && System.currentTimeMillis() / 1000 >= playerConfig.getInt("resetTime")) {
+			FileConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
+			if (Main.plugin.getConfig().getInt("flyResetTime") > 0 && System.currentTimeMillis() / 1000 >= playerData.getInt("resetTime")) {
 				Main.plugin.getLogger().info("Resetting fly time for " + uuid);
-				try {
-					playerConfig.set("secondsRemaining", Main.plugin.getConfig().getInt("flyTime"));
-					playerConfig.set("resetTime", System.currentTimeMillis() / 1000 + Main.plugin.getConfig().getInt("flyResetTime"));
-					playerConfig.save(playerFile);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				setTimes(playerData,playerFile);
 			}
 		}
 	}
@@ -43,13 +44,7 @@ public class PlayerSaver {
 	public static void forceResetTime(String uuid) {
 		File playerFile = getPlayerFile(uuid);
 		FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
-		try {
-			playerConfig.set("secondsRemaining", Main.plugin.getConfig().getInt("flyTime"));
-			playerConfig.set("resetTime", System.currentTimeMillis() / 1000 + Main.plugin.getConfig().getInt("flyResetTime"));
-			playerConfig.save(playerFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		setTimes(playerConfig,playerFile);
 	}
 
 	public static int decrementTime(String uuid) {

@@ -12,6 +12,7 @@ import me.sisko.uuid.UUIDFetcher;
 import net.md_5.bungee.api.ChatColor;
 import me.sisko.fly.Main;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CommandFlyTime implements CommandExecutor {
 
 	@Override
@@ -21,6 +22,7 @@ public class CommandFlyTime implements CommandExecutor {
 			if (Main.perms.has(p, "flytime.fly")) {
 				if (args.length == 0) {
 					if (PlayerSaver.canFly(p.getUniqueId().toString())) {
+
 						int secondsLeft = PlayerSaver.getFlightTime(p.getUniqueId().toString());
 						String timeLeft = Main.plugin.getConfig().getString("lang.timeLeft");
 						timeLeft = timeLeft.replaceAll("%MINUTES%", secondsLeft / 60 + "");
@@ -63,7 +65,7 @@ public class CommandFlyTime implements CommandExecutor {
 		} else {
 			if (args.length == 0) Main.plugin.getLogger().info("Console must use /flytime <player>");
 			else if (args.length == 1) {
-				String uuid = UUIDFetcher.getUUID(args[0]).toString();
+				String uuid = UUIDFetcher.getUUID(args[0]);
 				if (new File(new File(Main.plugin.getDataFolder(), File.separator + "PlayerData"), File.separator + uuid + ".yml").exists()) {
 					int secondsLeft = PlayerSaver.getFlightTime(uuid);
 					Main.plugin.getLogger().info(args[0] + " has " + secondsLeft/60 + " minutes and " +  secondsLeft%60 + " seconds left.");

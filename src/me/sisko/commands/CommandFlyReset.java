@@ -12,6 +12,7 @@ import me.sisko.uuid.UUIDFetcher;
 import net.md_5.bungee.api.ChatColor;
 import me.sisko.fly.Main;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CommandFlyReset implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
@@ -46,7 +47,7 @@ public class CommandFlyReset implements CommandExecutor {
 		} else {
 			if (args.length != 1) Main.plugin.getLogger().info(ChatColor.RED + "Usage: /flyreset <name>");
 			else {
-				String uuid = UUIDFetcher.getUUID(args[0]).toString();
+				String uuid = UUIDFetcher.getUUID(args[0]);
 				if(new File(new File(Main.plugin.getDataFolder(), File.separator + "PlayerData"), File.separator + uuid + ".yml").exists()) {
 					PlayerSaver.forceResetTime(uuid);
 					Main.plugin.getLogger().info("Reset fly time for " + args[0]);

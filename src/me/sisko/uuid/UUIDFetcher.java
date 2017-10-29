@@ -12,11 +12,12 @@ import java.nio.charset.Charset;
 public class UUIDFetcher {
 
 	/**
-	 * @param playername The name of the player
+	 * @param playerName The name of the player
 	 * @return The UUID of the given player
 	 */
-	public static String getUUID(String playername) {
-		String output = callURL("https://api.mojang.com/users/profiles/minecraft/" + playername);
+	@SuppressWarnings("StringConcatenationInLoop")
+    public static String getUUID(String playerName) {
+		String output = callURL("https://api.mojang.com/users/profiles/minecraft/" + playerName);
 
 		StringBuilder result = new StringBuilder();
 
@@ -27,9 +28,9 @@ public class UUIDFetcher {
 		String uuid = "";
 		try {
 			for(int i = 0; i <= 31; i++) {
-				uuid = uuid + u.charAt(i);
+				uuid += u.charAt(i);
 				if(i == 7 || i == 11 || i == 15 || i == 19) {
-					uuid = uuid + "-";
+					uuid += "-";
 				}
 			}
 		} catch (StringIndexOutOfBoundsException e) {
@@ -52,12 +53,12 @@ public class UUIDFetcher {
 
 				i++;
 			}
-		} catch (StringIndexOutOfBoundsException e) {}
+		} catch (StringIndexOutOfBoundsException ignored) {}
 	}
 
 	private static String callURL(String URL) {
 		StringBuilder sb = new StringBuilder();
-		URLConnection urlConn = null;
+		URLConnection urlConn;
 		InputStreamReader in = null;
 		try {
 			URL url = new URL(URL);
@@ -69,19 +70,18 @@ public class UUIDFetcher {
 				in = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
 				BufferedReader bufferedReader = new BufferedReader(in);
 
-				if (bufferedReader != null) {
-					int cp;
+                int cp;
 
-					while ((cp = bufferedReader.read()) != -1) {
-						sb.append((char) cp);
-					}
+                while ((cp = bufferedReader.read()) != -1) {
+                    sb.append((char) cp);
+                }
 
-					bufferedReader.close();
-				}
-			}
+                bufferedReader.close();
+            }
 
-			in.close();
-		} catch (Exception e) {
+            if (in != null)
+                in.close();
+        } catch (Exception e) {
 			e.printStackTrace();
 		} 
 
