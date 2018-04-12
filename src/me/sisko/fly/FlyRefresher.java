@@ -6,6 +6,7 @@ import java.util.ConcurrentModificationException;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.sisko.commands.CommandFly;
 import net.md_5.bungee.api.ChatColor;
 
 public class FlyRefresher extends BukkitRunnable  {
@@ -31,6 +32,7 @@ public class FlyRefresher extends BukkitRunnable  {
 					p.setAllowFlight(false);
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&',Main.prefix + Main.plugin.getConfig().getString("lang.noFlightTime")));
 					Main.flyingPlayers.remove(p);
+					CommandFly.safeTp(p);
 				} else {
 					p.setAllowFlight(true);
 				}
